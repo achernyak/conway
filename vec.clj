@@ -93,6 +93,14 @@
                :when (if (cells loc) (survive? n) (birth? n))]
            loc))))
 
+(defn hex-neighbours
+  [[x y]]
+  (for [dx [-1 0 1] dy (if (zero? dx) [-2 2] [-1 1])]
+    [(+ dx x) (+ dy y)]))
+
+(def hex-step (stepper hex-neighbours #{2} #{3 4}))
+
+
 (= (nth (iterate indexed-step glider) 8)
    (nth (iterate index-free-step glider) 8))
 
@@ -101,3 +109,5 @@
      first
      (populate (empty-board 6 6))
      pprint)
+
+(-> (hex-step #{[0 0] [1 1] [1 3] [0 4]}) pprint)
