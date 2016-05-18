@@ -64,4 +64,15 @@
       3 :on
       nil)))
 
-(-> (iterate indexed-step glider) (nth 8) pprint)
+(defn- step-row
+  "Yields the next state of the center row."
+  [rows-triple]
+  (vec (map liveness (cell-block rows-triple))))
+
+(defn index-free-step
+  "Yields the next state of the board."
+  [board]
+  (vec (map step-row (window (repeat nil) board))))
+
+(= (nth (iterate indexed-step glider) 8)
+   (nth (iterate index-free-step glider) 8))
