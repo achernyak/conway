@@ -41,14 +41,16 @@
      board (for [x (range h) y (range w)] [x y]))))
 
 (defn window
-  "Returns a lazy sequence of 3-item windows centered around each item of coll."
-  [coll]
-  (partition 3 1 (concat [nil] coll [nil])))
+  "Returns a lazy sequence of 3-item windows centered
+  around each item of coll, padded as necessary with
+  pad or nil"
+  ([coll] (window nil coll))
+  ([pad coll]
+  (partition 3 1 (concat [pad] coll [pad]))))
 
 (defn cell-block
   "Creates a sequences of 3x3 windows from a triple of 3 sequences."
   [[left mid right]]
-  (window (map vector
-               (or left (repeat nil)) mid (or right (repeat nil)))))
+  (window (map vector left mid right)))
 
 (-> (iterate indexed-step glider) (nth 8) pprint)
