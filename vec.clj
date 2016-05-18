@@ -20,6 +20,7 @@
   [[x y]]
   (for [dx [-1 0 1] dy [-1 0 1] :when (not= 0 dx dy)]
     [(+ dx x) (+ dy y)]))
+
 (defn count-neighbours
   [board loc]
   (count (filter #(get-in board %) (neighbours loc)))) 
@@ -74,5 +75,18 @@
   [board]
   (vec (map step-row (window (repeat nil) board))))
 
+(defn step
+  "Yields the next state of the world"
+  [cells]
+  (set (for [[loc n] (frequencies (mapcat neighbours cells))
+             :when (or (= n 3) (and (= n 2) (cells loc)))]
+         loc)))
+
 (= (nth (iterate indexed-step glider) 8)
    (nth (iterate index-free-step glider) 8))
+
+(->> (iterate step #{[2 0] [2 1] [2 2] [1 2] [0 1]})
+     (drop 8)
+     first
+     (populate (empty-board 6 6))
+     pprint)
