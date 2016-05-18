@@ -53,4 +53,15 @@
   [[left mid right]]
   (window (map vector left mid right)))
 
+(defn liveness
+  "Returns the liveness (nil or :on) of the center cell for
+  the next step."
+  [block]
+  (let [[_ [_ center _] _] block]
+    (case (- (count (filter #{:on} (apply concat block)))
+             (if (= :on center) 1 0))
+      2 center
+      3 :on
+      nil)))
+
 (-> (iterate indexed-step glider) (nth 8) pprint)
