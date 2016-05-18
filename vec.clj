@@ -82,6 +82,17 @@
              :when (or (= n 3) (and (= n 2) (cells loc)))]
          loc)))
 
+(defn stepper
+  "Returns a step function for Life-like cell automata.
+  neighbours takes a location and returns a sequential collection
+  of locations. survive? and birth? are predicates on the number
+  of living neighbours."
+  [neighbours birth? survive?]
+  (fn [cells]
+    (set (for [[loc n] (frequencies (mapcat neighbours cells))
+               :when (if (cells loc) (survive? n) (birth? n))]
+           loc))))
+
 (= (nth (iterate indexed-step glider) 8)
    (nth (iterate index-free-step glider) 8))
 
